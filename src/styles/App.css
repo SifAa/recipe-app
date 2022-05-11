@@ -1,0 +1,43 @@
+.container-fluid {
+  padding: 0;
+}
+
+.navbar {
+  padding: 0.5rem var(--bs-gutter-x, 0.75rem);
+}
+.navbar-collapse {
+  justify-content: end;
+  text-align: end;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.banner {
+  background-image: url("../images/placeholder.jpg");
+  background-repeat: repeat;
+  background-size: 500px;
+  height: 250px;
+}
+
+.content {
+  padding: 0.5rem var(--bs-gutter-x, 0.75rem);
+}
+
+/* Card with right side image (I think) */
+/* Work on a fiddle so that every second one is on the left */
+.RecipeCard {
+  flex-direction: row !important;
+}
+.RecipeCard img {
+  width: auto;
+  height: 100%;
+  border-radius: calc(0.25rem - 1px) 0 0 calc(0.25rem - 1px);
+}
+.RecipeCard .card-body {
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  min-height: 1px;
+  padding: 1.25rem;
+}
