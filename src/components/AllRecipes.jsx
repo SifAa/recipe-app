@@ -1,23 +1,51 @@
-export default function AllRecipes() {
-  // Search function (copied from other assignment, needs to be edited)
-  // const search = document.querySelector('#search');
-  //  search.addEventListener("keyup", () => {
-  //     let filter = search.value.toUpperCase();
-  //     let lis = document.querySelectorAll('.search');
+import RecipeCard from "./RecipeCard";
+import { useState } from "react";
+import { Col, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-  //     lis.forEach((name)=>{
-  //         if (name.innerText.toUpperCase().indexOf(filter) >= 0) {
+export default function AllRecipes(props) {
+  const [query, setQuery] = useState("");
 
-  //             name.parentElement.style.display = 'list-item';
-  //         } else{
-  //             name.parentElement.style.display = 'none';
-  //         }
-  //     })
-  // })
+  const saveRecipeID = (e) => {
+    props.setSelectedRecipeId(e.target.id);
+  };
+
   return (
-    <div className="col-12 content">
-      Here is going to be a list of clickable cards with recipes and their
-      general description. Maybe also a search box.
-    </div>
+    <Col className="content">
+      <h1 className="pageTitle">All recipes</h1>
+      <Row>
+        <input
+          className="col-12"
+          type="text"
+          id="search"
+          placeholder="Search for recipe.."
+          onChange={(event) => setQuery(event.target.value)}
+        />
+      </Row>
+      <Col className="recipe--list">
+        {props.myRecipes
+          .filter((recipe) => {
+            if (query === "") {
+              return recipe;
+            } else if (
+              recipe.recipeName.toLowerCase().includes(query.toLowerCase())
+            ) {
+              return recipe;
+            }
+          })
+          .map((recipe) => {
+            return (
+              <Link
+                key={recipe.recipeId}
+                to="/recipe"
+                id={recipe.recipeId}
+                onClick={saveRecipeID}
+              >
+                <RecipeCard recipe={recipe} />
+              </Link>
+            );
+          })}
+      </Col>
+    </Col>
   );
 }

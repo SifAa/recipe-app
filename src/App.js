@@ -6,6 +6,8 @@ import Nav from "./components/Nav";
 import Banner from "./components/Banner";
 import AllRecipes from "./components/AllRecipes";
 import AddRecipe from "./components/AddRecipe";
+import Recipe from "./components/Recipe";
+import { useShowRecipeList } from "./components/firebase";
 //import EditRecipes from "./components/EditRecipes";
 
 function App() {
@@ -15,7 +17,6 @@ function App() {
     // { linkText: "Edit recipes", route: "/edit" },
   ];
   const [myRecipe, setMyRecipe] = useState({
-    //recipeId: "",
     recipeName: "",
     description: "",
     img: "",
@@ -23,13 +24,18 @@ function App() {
     method: [{ step: "" }],
     type: "",
   });
-  const [myRecipes, setMyRecipes] = useState({
-    //recipeId: "",
-    recipeName: "",
-    description: "",
-    img: "",
-    type: "",
-  });
+  const [myRecipes, setMyRecipes] = useState([
+    {
+      recipeId: "",
+      recipeName: "",
+      description: "",
+      img: "",
+      type: "",
+    },
+  ]);
+  const [selectedRecipeId, setSelectedRecipeId] = useState("");
+
+  useShowRecipeList(setMyRecipes);
 
   return (
     <Container fluid>
@@ -46,6 +52,8 @@ function App() {
                 title="All recipes"
                 myRecipes={myRecipes}
                 setMyRecipes={setMyRecipes}
+                setSelectedRecipeId={setSelectedRecipeId}
+                selectedRecipeId={selectedRecipeId}
               />
             }
             exact
@@ -63,14 +71,19 @@ function App() {
           />
           {/* <Route
             path="/edit"
-            element={<EditRecipes title="Edit recipes" />}
+            element={<EditRecipes title="Edit recipe" />}
             exact
           /> */}
-          {/* <Route
-            path="/{myRecipe.recipeId}"
-            element={<Recipe title="{myRecipe.recipeName}" myRecipes={myRecipes} />}
+          <Route
+            path="/recipe"
+            element={
+              <Recipe
+                title={myRecipe.recipeName}
+                selectedRecipeId={selectedRecipeId}
+              />
+            }
             exact
-          /> */}
+          />
         </Routes>
       </main>
     </Container>

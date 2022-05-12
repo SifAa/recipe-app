@@ -16,7 +16,11 @@ import {
   collection,
   where,
   addDoc,
+  onSnapshot,
+  doc,
+  getDoc,
 } from "firebase/firestore";
+import { useEffect } from "react";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBomVYN9jTinQ_SGSpIMTFrafO-P3k5foQ",
@@ -39,42 +43,45 @@ const recipesCollection = collection(db, "recipes");
 ////// Create Recipe function //////
 function createRecipe(myRecipe) {
   console.log(myRecipe);
-  //addDoc(recipesCollection);
-  //Link to page of recipe or list of recipes
+  addDoc(recipesCollection, myRecipe);
 }
 
 //// Read Recipe List function /////
-// React.useEffect(() => {
-//   onSnapshot(query(recipesCollection), (snapshot) => {
-//     const data = snapshot.docs
-//       .map((doc) => {
-//         return doc.data();
-//       })
-//       .sort((a, b) => {
-//         if (a.doc.data.recipeName < b.doc.data.recipeName) return -1;
-//         else if (a.doc.data.recipeName > b.doc.data.recipeName) return 1;
-//         else return 0;
-//       });
-//     setMyRecipes({
-//       recipeId: data.id,
-//       recipeName: data.recipeName,
-//       description: data.description,
-//       img: data.img,
-//       type: data.type,
-//     });
-//   });
-// }, []);
+function useShowRecipeList(setMyRecipes) {
+  useEffect(() => {
+    onSnapshot(query(recipesCollection), (snapshot) => {
+      const data = snapshot.docs
+        .map((doc) => {
+          return { recipeId: doc.id, ...doc.data() };
+        })
+        .sort((a, b) => {
+          if (a.doc.data.recipeName < b.doc.data.recipeName) return -1;
+          else if (a.doc.data.recipeName > b.doc.data.recipeName) return 1;
+          else return 0;
+        });
+      setMyRecipes(data);
+    });
+  }, [setMyRecipes]);
+}
 
 /////// Read Recipe function ///////
-// const addRecipe = (recipe, id) => {
-//   setMyRecipe({
-//     recipeId: id,
-//     recipeName: recipe.recipeName,
-//     description: recipe.description,
-//     img: recipe.img,
-//     type: recipe.type,
-//   });
-// };
+const readRecipe = async (recipeId) => {
+  const docRef = doc(db, "recipes", recipeId);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    console.log("Document data:", docSnap.data());
+    //     setMyRecipe({
+    //     recipeId: id,
+    //     recipeName: recipe.recipeName,
+    //     description: recipe.description,
+    //     img: recipe.img,
+    //     type: recipe.type,
+    //   });
+  } else {
+    // doc.data() will be undefined in this case
+    console.log("No such document!");
+  }
+};
 
 ///// Delete Recipe function //////
 ////////////////////////////////////
@@ -137,7 +144,9 @@ export {
   auth,
   db,
   storage,
+  readRecipe,
   createRecipe,
+  useShowRecipeList,
   signInWithGoogle,
   logInWithEmailAndPassword,
   registerWithEmailAndPassword,
