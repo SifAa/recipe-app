@@ -7,7 +7,7 @@ import Banner from "./components/Banner";
 import AllRecipes from "./components/AllRecipes";
 import AddRecipe from "./components/AddRecipe";
 import Recipe from "./components/Recipe";
-import { useShowRecipeList } from "./components/firebase";
+import { useShowRecipeList } from "./hooks/firebase";
 //import EditRecipes from "./components/EditRecipes";
 
 function App() {
@@ -79,6 +79,8 @@ function App() {
             element={
               <Recipe
                 title={myRecipe.recipeName}
+                myRecipe={myRecipe}
+                setMyRecipe={setMyRecipe}
                 selectedRecipeId={selectedRecipeId}
               />
             }

@@ -19,6 +19,7 @@ import {
   onSnapshot,
   doc,
   getDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { useEffect } from "react";
 
@@ -55,8 +56,8 @@ function useShowRecipeList(setMyRecipes) {
           return { recipeId: doc.id, ...doc.data() };
         })
         .sort((a, b) => {
-          if (a.doc.data.recipeName < b.doc.data.recipeName) return -1;
-          else if (a.doc.data.recipeName > b.doc.data.recipeName) return 1;
+          if (a.recipeName < b.recipeName) return -1;
+          else if (a.recipeName > b.recipeName) return 1;
           else return 0;
         });
       setMyRecipes(data);
@@ -65,18 +66,19 @@ function useShowRecipeList(setMyRecipes) {
 }
 
 /////// Read Recipe function ///////
-const readRecipe = async (recipeId) => {
+const readRecipe = async (recipeId, setMyRecipe) => {
   const docRef = doc(db, "recipes", recipeId);
   const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
-    //     setMyRecipe({
-    //     recipeId: id,
-    //     recipeName: recipe.recipeName,
-    //     description: recipe.description,
-    //     img: recipe.img,
-    //     type: recipe.type,
-    //   });
+    // console.log("Document data:", docSnap.data().recipeName);
+    setMyRecipe({
+      recipeName: docSnap.data().recipeName,
+      description: docSnap.data().description,
+      img: docSnap.data().img,
+      ingredients: docSnap.data().ingredients,
+      method: docSnap.data().method,
+      type: docSnap.data().type,
+    });
   } else {
     // doc.data() will be undefined in this case
     console.log("No such document!");
@@ -85,6 +87,14 @@ const readRecipe = async (recipeId) => {
 
 ///// Delete Recipe function //////
 ////////////////////////////////////
+const deleteRecipe = async (recipeId) => {
+  const docRef = doc(db, "recipes", recipeId);
+  try {
+    await deleteDoc(docRef);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 ////////////////////////////////////
 //////////// Login /////////////////
@@ -146,6 +156,7 @@ export {
   storage,
   readRecipe,
   createRecipe,
+  deleteRecipe,
   useShowRecipeList,
   signInWithGoogle,
   logInWithEmailAndPassword,

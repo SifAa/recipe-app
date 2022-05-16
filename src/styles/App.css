@@ -2,6 +2,10 @@
   padding: 0;
 }
 
+.row > * {
+  padding: 0;
+}
+
 .navbar {
   padding: 0.5rem var(--bs-gutter-x, 0.75rem);
 }
@@ -42,7 +46,7 @@
 .recipeCard {
   flex-direction: row !important;
   height: fit-content(33.33333333%);
-  /* max-height: 200px; */
+  max-height: 200px;
   overflow: hidden;
   margin: 10px 0;
 }
@@ -56,4 +60,16 @@
   object-position: center;
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
+}
+
+.recipe--about .recipeImg {
+  max-height: 250px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe--about .recipeImg img {
+  max-width: 150%;
 }

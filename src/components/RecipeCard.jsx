@@ -17,7 +17,7 @@ export default function RecipeCard(props) {
         {/* Make something fun with tag if time */}
       </Card.Body>
       <Col
-        xs={12}
+        //xs={{ order: "first" }}
         sm={4}
         className="d-none d-sm-block image-box"
         id={props.recipe.recipeId}

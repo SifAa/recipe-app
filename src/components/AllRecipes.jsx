@@ -28,7 +28,9 @@ export default function AllRecipes(props) {
             if (query === "") {
               return recipe;
             } else if (
-              recipe.recipeName.toLowerCase().includes(query.toLowerCase())
+              recipe.recipeName.toLowerCase().includes(query.toLowerCase()) ||
+              recipe.description.toLowerCase().includes(query.toLowerCase()) ||
+              recipe.type.toLowerCase().includes(query.toLowerCase())
             ) {
               return recipe;
             }

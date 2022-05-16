@@ -1,9 +1,13 @@
 import { Form, Button } from "react-bootstrap";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useFileUpload } from "../hooks/Storage";
 
 export default function RecipeForm(props) {
   const [ingredientList, setIngredientList] = useState([{ ingredient: "" }]);
   const [methodList, setMethodList] = useState([{ step: "" }]);
+  const [file, setFile] = useState("");
+  const [progresspercent, setProgresspercent] = useState(null);
   const selectOptions = [
     "Baking",
     "Desserts",
@@ -15,6 +19,9 @@ export default function RecipeForm(props) {
     "Sauce",
     "Sides",
   ];
+  const navigate = useNavigate();
+
+  useFileUpload(file, props.setMyRecipe, setProgresspercent);
 
   // handle input change
   const handleListChange = (index, event) => {
@@ -43,6 +50,9 @@ export default function RecipeForm(props) {
       ...props.myRecipe,
       [event.target.name]: value,
     });
+  };
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
   };
 
   // add buttons
@@ -74,11 +84,10 @@ export default function RecipeForm(props) {
   };
 
   // Submit form
-  const submit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     props.submitForm();
     props.setMyRecipe({
-      //recipeId: "",
       recipeName: "",
       description: "",
       img: "",
@@ -88,6 +97,8 @@ export default function RecipeForm(props) {
     });
     setIngredientList([{ ingredient: "" }]);
     setMethodList([{ step: "" }]);
+    navigate(-1);
+    // how to get it to reroute to the recipes page? for now just reroute to frontpage
   };
 
   return (
@@ -118,7 +129,12 @@ export default function RecipeForm(props) {
         </Form.Group>
         <Form.Group className="mb-3" controlId="RecipeImg">
           <Form.Label>Image</Form.Label>
-          <Form.Control name="img" type="file" />
+          <Form.Control name="img" type="file" onChange={handleFileChange} />
+          {progresspercent !== null && (
+            <Form.Text className="text-muted progresspercent">
+              {progresspercent}%
+            </Form.Text>
+          )}
         </Form.Group>
         <Form.Group className="mb-3" controlId="RecipeIngredients">
           <Form.Label>Ingredients</Form.Label>
@@ -208,7 +224,12 @@ export default function RecipeForm(props) {
             <option value="Other">Other</option>
           </Form.Select>
         </Form.Group>
-        <Button variant="primary" type="submit" onClick={submit}>
+        <Button
+          disabled={progresspercent !== null && progresspercent < 100}
+          variant="primary"
+          type="submit"
+          onClick={handleSubmit}
+        >
           Submit
         </Button>
       </Form>
